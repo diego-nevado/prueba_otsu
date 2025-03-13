@@ -1,11 +1,17 @@
 <?php
-$host = 'localhost';
-$db   = 'agenda_telefonica';
-$user = 'root';
-$pass = '';
-$charset = 'utf8mb4';
+// Configuración de la base de datos
+$config = [
+    'host' => 'localhost',
+    'db'   => 'agenda_telefonica',
+    'user' => 'root',
+    'pass' => 'root',
+    'charset' => 'utf8mb4'
+];
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+// Construir el DSN
+$dsn = "mysql:host={$config['host']};dbname={$config['db']};charset={$config['charset']}";
+
+// Opciones de PDO
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -13,8 +19,15 @@ $options = [
 ];
 
 try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
+    // Crear conexión PDO
+    $pdo = new PDO($dsn, $config['user'], $config['pass'], $options);
 } catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    // Manejo de errores
+    die("Error de conexión: " . $e->getMessage());
+}
+
+// Función para proteger de inyecciones sql
+function sanitize($input) {
+    return htmlspecialchars(strip_tags(trim($input)));
 }
 

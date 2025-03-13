@@ -5,6 +5,9 @@ if (isset($_SESSION['user_id'])) {
     header("Location: contactos.php");
     exit();
 }
+
+// Mensaje de error (si existe)
+$error = isset($_GET['error']) ? $_GET['error'] : '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,7 +26,12 @@ if (isset($_SESSION['user_id'])) {
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title text-center">Iniciar Sesión</h2>
-                        <form action="login.php" method="post">
+                        <?php
+                        if ($error) {
+                            echo "<div class='alert alert-danger'>$error</div>";
+                        }
+                        ?>
+                        <form action="login.php" method="post" id="loginForm">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Usuario</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
@@ -45,6 +53,19 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#loginForm').submit(function(e) {
+            var username = $('#username').val();
+            var password = $('#password').val();
+            
+            if (username.trim() === '' || password.trim() === '') {
+                e.preventDefault();
+                alert('Por favor, rellena todos los campos.');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
 
